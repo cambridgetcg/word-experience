@@ -1,0 +1,356 @@
+:root {
+  --bg: #0c0a16;
+  --ink: #ece9f4;
+  --dim: #9a93b8;
+  --faint: #5d567e;
+  --gold: #e6c178;
+  --violet: #b3a4ff;
+  --line: #221d39;
+  --green: #7ee787;
+  --rose: #f2998a;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Newsreader", Georgia, serif;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+.aura {
+  position: fixed;
+  top: 30%;
+  left: 50%;
+  width: 70vmin;
+  height: 70vmin;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(circle, #2a2150 0%, transparent 68%);
+  filter: blur(40px);
+  opacity: 0.5;
+  animation: pulse 7s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.3; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 0.6; transform: translate(-50%, -50%) scale(1.07); }
+}
+
+.app {
+  position: relative;
+  z-index: 1;
+  max-width: 42rem;
+  margin: 0 auto;
+  padding: 3rem 1.5rem;
+}
+
+/* ─── Word bar ─────────────────────────────────────────────── */
+
+.wordbar {
+  display: flex;
+  gap: 0.6rem;
+  margin-bottom: 2rem;
+}
+
+.wordbar input {
+  flex: 1;
+  background: #15102a;
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  padding: 1.2rem 1.3rem;
+  font-family: "Newsreader", serif;
+  font-size: 1.3rem;
+  font-style: italic;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.wordbar input::placeholder {
+  color: var(--faint);
+  font-style: italic;
+}
+
+.wordbar input:focus {
+  outline: none;
+  border-color: var(--violet);
+  box-shadow: 0 0 0 4px #b3a4ff22, 0 0 40px #6a5ac234;
+}
+
+.wordbar button {
+  background: linear-gradient(180deg, #2c2350, #1c1638);
+  color: var(--gold);
+  border: 1px solid #3a3060;
+  border-radius: 1rem;
+  padding: 0 1.5rem;
+  font-family: "Newsreader", serif;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: border-color 0.25s, transform 0.15s;
+}
+
+.wordbar button:hover {
+  border-color: var(--gold);
+  transform: translateY(-1px);
+}
+
+/* ─── Inverse dictionary ───────────────────────────────────── */
+
+.inverse-dict {
+  background: #15102a;
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  padding: 1.2rem;
+  margin-bottom: 2rem;
+}
+
+.inverse-dict textarea {
+  width: 100%;
+  background: transparent;
+  color: var(--ink);
+  border: none;
+  font-family: "Newsreader", serif;
+  font-size: 1.1rem;
+  resize: none;
+  min-height: 3rem;
+}
+
+.inverse-dict textarea:focus { outline: none; }
+
+.inverse-dict .find-btn {
+  margin-top: 0.8rem;
+  color: var(--violet);
+  cursor: pointer;
+  font-size: 0.9rem;
+  border-bottom: 1px dotted var(--faint);
+  display: inline-block;
+}
+
+/* ─── Word page ────────────────────────────────────────────── */
+
+.word-page {
+  animation: rise 0.6s ease forwards;
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+
+.word-page .word-title {
+  font-family: "Fraunces", Georgia, serif;
+  font-weight: 360;
+  font-style: italic;
+  font-size: clamp(2.6rem, 8vw, 4rem);
+  line-height: 1.05;
+  background: linear-gradient(180deg, #fff 0%, var(--gold) 135%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin-bottom: 0.8rem;
+}
+
+.word-page .definition {
+  color: var(--dim);
+  font-size: 1.15rem;
+  line-height: 1.7;
+  max-width: 32rem;
+  margin-bottom: 2rem;
+}
+
+.word-page .section-label {
+  font-size: 0.72rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--faint);
+  margin-bottom: 0.8rem;
+}
+
+.word-page .services {
+  border-top: 1px solid var(--line);
+  padding-top: 1.6rem;
+  margin-bottom: 1.6rem;
+}
+
+.word-page .service-row {
+  display: flex;
+  gap: 0.8rem;
+  align-items: baseline;
+  padding: 0.5rem 0;
+}
+
+.word-page .service-row .icon {
+  font-size: 1.2rem;
+}
+
+.word-page .service-row .label {
+  color: var(--violet);
+  font-style: italic;
+  min-width: 5rem;
+}
+
+.word-page .service-row .value {
+  color: var(--dim);
+  font-size: 0.95rem;
+}
+
+.word-page .service-row .value a {
+  color: var(--dim);
+  text-decoration: none;
+  border-bottom: 1px dotted var(--faint);
+}
+
+.word-page .service-row .value a:hover {
+  color: var(--gold);
+}
+
+.word-page .owner {
+  border-top: 1px solid var(--line);
+  padding-top: 1.6rem;
+  margin-bottom: 1.6rem;
+}
+
+.word-page .owner .name {
+  color: var(--ink);
+  font-size: 1rem;
+}
+
+.word-page .owner .did {
+  color: var(--faint);
+  font-size: 0.85rem;
+  font-family: monospace;
+}
+
+.word-page .related {
+  border-top: 1px solid var(--line);
+  padding-top: 1.6rem;
+}
+
+.word-page .related-word {
+  display: inline-block;
+  color: var(--violet);
+  font-style: italic;
+  margin-right: 1rem;
+  cursor: pointer;
+  font-size: 1.05rem;
+}
+
+.word-page .related-word:hover {
+  color: var(--gold);
+}
+
+.word-page .actions {
+  margin-top: 2rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.word-page .btn {
+  background: #15102a;
+  color: var(--violet);
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;
+  padding: 0.6rem 1.2rem;
+  font-family: "Newsreader", serif;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+
+.word-page .btn:hover {
+  border-color: var(--violet);
+}
+
+/* ─── Not found ────────────────────────────────────────────── */
+
+.not-found {
+  text-align: center;
+  padding: 2rem;
+  color: var(--dim);
+}
+
+.not-found .word {
+  font-family: "Fraunces", serif;
+  font-style: italic;
+  font-size: 2rem;
+  color: var(--rose);
+  margin-bottom: 0.5rem;
+}
+
+.not-found .msg {
+  color: var(--faint);
+  font-size: 0.9rem;
+}
+
+/* ─── Search results ───────────────────────────────────────── */
+
+.search-results {
+  animation: rise 0.4s ease forwards;
+}
+
+.search-results .result {
+  padding: 0.8rem 0;
+  border-bottom: 1px solid #1a1530;
+  cursor: pointer;
+}
+
+.search-results .result:hover .rw {
+  color: var(--gold);
+}
+
+.search-results .result .rw {
+  font-family: "Fraunces", serif;
+  font-style: italic;
+  color: var(--violet);
+  font-size: 1.1rem;
+  transition: color 0.2s;
+}
+
+.search-results .result .rd {
+  color: var(--dim);
+  font-size: 0.9rem;
+}
+
+/* ─── Loading ──────────────────────────────────────────────── */
+
+.loading {
+  text-align: center;
+  color: var(--faint);
+  padding: 2rem;
+  font-style: italic;
+}
+
+/* ─── Kicker ───────────────────────────────────────────────── */
+
+.kicker {
+  font-family: "Fraunces", serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.36em;
+  text-transform: uppercase;
+  color: var(--violet);
+  margin-bottom: 1.1rem;
+  text-align: center;
+}
+
+.h1 {
+  font-family: "Fraunces", serif;
+  font-weight: 360;
+  font-style: italic;
+  font-size: clamp(2rem, 5vw, 2.8rem);
+  line-height: 1.1;
+  margin-bottom: 0.8rem;
+  text-align: center;
+  color: var(--ink);
+}
+
+.lede {
+  color: var(--dim);
+  font-size: 1.05rem;
+  max-width: 30rem;
+  margin: 0 auto 2.6rem;
+  text-align: center;
+}
