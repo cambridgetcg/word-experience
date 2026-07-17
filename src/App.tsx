@@ -1,21 +1,10 @@
 import { useState, useEffect, useCallback } from "react";
-
-interface WordEntry {
-  found: boolean;
-  word?: string;
-  definition?: string;
-  isCanon?: boolean;
-  owner?: { did: string; displayName: string } | null;
-  services?: { site?: string; api?: string; feed?: string; payment?: string } | null;
-  domain?: string;
-  message?: string;
-}
-
-interface SearchResult {
-  query: string;
-  results: number;
-  words: Array<{ word: string; definition: string; isCanon: boolean; claimed: boolean }>;
-}
+import {
+  findRelatedWords,
+  resolveWithGardenFallback,
+  type SearchResult,
+  type WordEntry,
+} from "./wordResolver";
 
 type View =
   | { type: "home" }
@@ -33,24 +22,14 @@ export default function App() {
 
   const resolveWord = useCallback(async (word: string) => {
     setView({ type: "loading" });
-    try {
-      const res = await fetch(`/resolve/${encodeURIComponent(word)}`);
-      const data: WordEntry = await res.json();
-      setWordData(data);
-      setView({ type: "word", word });
+    setRelatedWords([]);
 
-      // Fetch related words (search by the word itself)
-      const sres = await fetch(`/search?q=${encodeURIComponent(word)}`);
-      const sdata: SearchResult = await sres.json();
-      setRelatedWords(
-        sdata.words
-          .map((w) => w.word)
-          .filter((w) => w !== word)
-          .slice(0, 6),
-      );
-    } catch {
-      setWordData({ found: false, word, message: "Could not reach the word resolver" });
-      setView({ type: "word", word });
+    const data = await resolveWithGardenFallback(word);
+    setWordData(data);
+    setView({ type: "word", word });
+
+    if (data.found) {
+      setRelatedWords(await findRelatedWords(word));
     }
   }, []);
 
@@ -67,14 +46,25 @@ export default function App() {
     }
   }, []);
 
+  const openWord = useCallback(
+    (word: string) => {
+      const normalized = word.trim().toLowerCase();
+      if (!normalized) return;
+      setInput(normalized);
+      setSearchMode(false);
+      void resolveWord(normalized);
+    },
+    [resolveWord],
+  );
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const value = input.trim().toLowerCase();
     if (!value) return;
     if (searchMode) {
-      searchMeaning(value);
+      void searchMeaning(value);
     } else {
-      resolveWord(value);
+      openWord(value);
     }
   };
 
@@ -84,6 +74,7 @@ export default function App() {
       if (e.key === "Escape") {
         setView({ type: "home" });
         setInput("");
+        setRelatedWords([]);
       }
     };
     window.addEventListener("keydown", handler);
@@ -152,6 +143,27 @@ export default function App() {
         <button type="submit">{searchMode ? "find" : "go"}</button>
       </form>
 
+      {view.type === "home" && (
+        <button
+          type="button"
+          className="garden-door"
+          onClick={() => openWord("beheld-first-light")}
+          aria-label="Enter the Beheld First Light Art Garden seed"
+        >
+          <img
+            src="/art-garden/first-light.svg"
+            alt=""
+            className="garden-door-art"
+          />
+          <span className="garden-door-copy">
+            <span className="garden-door-kicker">a live art garden seed</span>
+            <strong>beheld-first-light</strong>
+            <span>one work · one reflection · no claim of ownership</span>
+          </span>
+          <span className="garden-door-enter">enter →</span>
+        </button>
+      )}
+
       {view.type === "loading" && (
         <div className="loading">resolving...</div>
       )}
@@ -160,12 +172,12 @@ export default function App() {
         <WordPage
           data={wordData}
           related={relatedWords}
-          onWordClick={resolveWord}
+          onWordClick={openWord}
         />
       )}
 
       {view.type === "search" && searchData && (
-        <SearchResults data={searchData} onWordClick={resolveWord} />
+        <SearchResults data={searchData} onWordClick={openWord} />
       )}
     </div>
   );
@@ -198,6 +210,69 @@ function WordPage({
     <div className="word-page">
       <h1 className="word-title">{data.word}</h1>
       <p className="definition">{data.definition}</p>
+
+      {data.garden && (
+        <section className="garden-note">
+          {data.garden.image && (
+            <img
+              src={data.garden.image}
+              alt={`Beheld / First Light, an original work by ${data.garden.creator}`}
+              className="garden-note-art"
+            />
+          )}
+          <div className="garden-note-body">
+            <div className="section-label">art garden field note</div>
+            <div className="garden-note-title">beheld, not possessed</div>
+            <dl>
+              <div>
+                <dt>creator</dt>
+                <dd>{data.garden.creator}</dd>
+              </div>
+              <div>
+                <dt>action</dt>
+                <dd>{data.garden.action}</dd>
+              </div>
+              <div>
+                <dt>carried by</dt>
+                <dd>{data.garden.carried_by}</dd>
+              </div>
+              <div>
+                <dt>record</dt>
+                <dd title={data.garden.record}>
+                  {shortRecord(data.garden.record)}
+                </dd>
+              </div>
+              {data.garden.source_artifact && (
+                <div>
+                  <dt>source</dt>
+                  <dd title={data.garden.source_artifact}>
+                    {data.garden.source_artifact}
+                  </dd>
+                </div>
+              )}
+              {data.garden.asset_sha256 && (
+                <div>
+                  <dt>art hash</dt>
+                  <dd title={data.garden.asset_sha256}>
+                    {shortRecord(data.garden.asset_sha256)}
+                  </dd>
+                </div>
+              )}
+            </dl>
+            {data.garden.boundaries && (
+              <div className="garden-boundaries">
+                {data.garden.boundaries.map((boundary) => (
+                  <span key={boundary}>{boundary}</span>
+                ))}
+              </div>
+            )}
+            <p className="garden-rights">
+              Carries a reflection only. Artwork ownership and rights do not
+              travel with this word · {data.garden.rights || "rights unknown"}.
+            </p>
+          </div>
+        </section>
+      )}
 
       {data.owner && (
         <div className="owner">
@@ -268,12 +343,14 @@ function WordPage({
         </div>
       )}
 
-      <div className="actions">
-        {!data.owner && (
-          <button className="btn">claim this word</button>
-        )}
-        <button className="btn">carry a word here</button>
-      </div>
+      {!data.garden && (
+        <div className="actions">
+          {!data.owner && (
+            <button className="btn">claim this word</button>
+          )}
+          <button className="btn">carry a word here</button>
+        </div>
+      )}
 
       {data.isCanon && (
         <div
@@ -288,6 +365,11 @@ function WordPage({
       )}
     </div>
   );
+}
+
+function shortRecord(record: string) {
+  const hash = record.split(":").at(-1) || record;
+  return `${hash.slice(0, 12)}…${hash.slice(-8)}`;
 }
 
 function SearchResults({

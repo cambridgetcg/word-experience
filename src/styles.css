@@ -354,3 +354,178 @@ body {
   margin: 0 auto 2.6rem;
   text-align: center;
 }
+
+.garden-door {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 5.25rem 1fr auto;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 0.4rem;
+  padding: 0.75rem;
+  color: var(--ink);
+  text-align: left;
+  background:
+    linear-gradient(105deg, rgba(35, 69, 74, 0.48), rgba(38, 27, 69, 0.8)),
+    #15102a;
+  border: 1px solid #3d3957;
+  border-radius: 1.15rem;
+  cursor: pointer;
+  overflow: hidden;
+  transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+}
+
+.garden-door:hover {
+  transform: translateY(-2px);
+  border-color: var(--gold);
+  box-shadow: 0 16px 48px rgba(4, 3, 12, 0.4);
+}
+
+.garden-door-art {
+  display: block;
+  width: 5.25rem;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 0.75rem;
+}
+
+.garden-door-copy {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+}
+
+.garden-door-kicker {
+  color: var(--gold);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.garden-door-copy strong {
+  margin: 0.08rem 0;
+  font-family: "Fraunces", Georgia, serif;
+  font-size: 1.25rem;
+  font-style: italic;
+  font-weight: 420;
+}
+
+.garden-door-copy > span:last-child {
+  color: var(--dim);
+  font-size: 0.8rem;
+}
+
+.garden-door-enter {
+  padding-right: 0.5rem;
+  color: var(--violet);
+  white-space: nowrap;
+}
+
+.word-page .garden-note {
+  display: grid;
+  grid-template-columns: minmax(10rem, 0.82fr) minmax(0, 1.18fr);
+  gap: 1.25rem;
+  margin: 0 0 2rem;
+  padding: 0.8rem;
+  background:
+    linear-gradient(145deg, rgba(41, 73, 90, 0.3), rgba(21, 16, 42, 0.92)),
+    #15102a;
+  border: 1px solid #3d3957;
+  border-radius: 1.2rem;
+}
+
+.garden-note-art {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 0.8rem;
+}
+
+.garden-note-body {
+  min-width: 0;
+  padding: 0.35rem 0.35rem 0.35rem 0;
+}
+
+.word-page .garden-note-body .section-label {
+  margin-bottom: 0.25rem;
+  color: var(--gold);
+}
+
+.garden-note-title {
+  margin-bottom: 0.9rem;
+  color: var(--ink);
+  font-family: "Fraunces", Georgia, serif;
+  font-size: 1.25rem;
+  font-style: italic;
+}
+
+.garden-note dl > div {
+  display: grid;
+  grid-template-columns: 5rem minmax(0, 1fr);
+  gap: 0.7rem;
+  padding: 0.18rem 0;
+}
+
+.garden-note dt {
+  color: var(--faint);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+}
+
+.garden-note dd {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--dim);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.72rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.garden-boundaries {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.8rem;
+}
+
+.garden-boundaries span {
+  padding: 0.18rem 0.42rem;
+  color: var(--green);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.58rem;
+  text-transform: uppercase;
+  border: 1px solid rgba(126, 231, 135, 0.25);
+  border-radius: 999px;
+}
+
+.garden-rights {
+  margin-top: 0.7rem;
+  color: var(--faint);
+  font-size: 0.72rem;
+  line-height: 1.45;
+}
+
+@media (max-width: 34rem) {
+  .garden-door {
+    grid-template-columns: 4.25rem 1fr;
+  }
+
+  .garden-door-art {
+    width: 4.25rem;
+  }
+
+  .garden-door-enter {
+    display: none;
+  }
+
+  .word-page .garden-note {
+    grid-template-columns: 1fr;
+  }
+
+  .garden-note-body {
+    padding: 0.35rem;
+  }
+}

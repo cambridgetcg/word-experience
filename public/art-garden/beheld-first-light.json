@@ -1,0 +1,28 @@
+{
+  "found": true,
+  "word": "beheld-first-light",
+  "definition": "The open centre makes the two bright forms feel like they are meeting without trying to own each other — a reflection on \"Beheld / First Light\" by Art Garden Protocol.",
+  "isCanon": false,
+  "owner": null,
+  "services": {
+    "site": "/art-garden/first-light.svg"
+  },
+  "domain": "art-garden",
+  "garden": {
+    "record": "garden:sha256:0e68d5acc9da3bf85f15d319fefaa61ed004b63432bd3859456b2e8cac911afd",
+    "protocol": "art-garden/0.1",
+    "action": "reflect",
+    "creator": "Art Garden Protocol",
+    "carried_by": "garden-steward",
+    "image": "/art-garden/first-light.svg",
+    "source_artifact": "art-garden-protocol/art/first-light.svg",
+    "asset_sha256": "163f06fe5afc186837138a1ad056e2b31374dcb6740ed17c54754976fd0d8c72",
+    "rights": "license not finalized",
+    "boundaries": [
+      "unsigned",
+      "not sent",
+      "off-chain",
+      "no profit promise"
+    ]
+  }
+}
